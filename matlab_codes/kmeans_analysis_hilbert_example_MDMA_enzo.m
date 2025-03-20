@@ -1,6 +1,8 @@
 clc
 clear all
 close all
+%%
+cd('C:/Users/diego/Desktop/phase_coherance_consciousness/data');
 
 
 load('MDMA_TS_FC.mat', 'DataCorrel')
@@ -13,7 +15,7 @@ example_data= horzcat(MDMACAT,MPCAT);
 %example_data= horzcat(PLA5CAT);
 
 
-
+%%
 T_shift = 9;
 do_filter = 0; %yes no filter
 

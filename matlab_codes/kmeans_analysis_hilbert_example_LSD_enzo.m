@@ -1,10 +1,15 @@
 clc
 clear all
 close all
-
+%%
+cd('C:/Users/diego/Desktop/phase_coherance_consciousness/data');
 
 load('LSD_TS_FC.mat', 'DataCorrel')
+
+%- Load connectome
 load('Structural.mat')
+SC=A;
+
 
 %%
 LSDACAT= horzcat(DataCorrel(1).LSD_TS,DataCorrel(2).LSD_TS,DataCorrel(3).LSD_TS,DataCorrel(4).LSD_TS,DataCorrel(5).LSD_TS,DataCorrel(6).LSD_TS,DataCorrel(7).LSD_TS,DataCorrel(8).LSD_TS,DataCorrel(9).LSD_TS,DataCorrel(10).LSD_TS,DataCorrel(11).LSD_TS,DataCorrel(12).LSD_TS,DataCorrel(13).LSD_TS,DataCorrel(14).LSD_TS,DataCorrel(15).LSD_TS,DataCorrel(16).LSD_TS);
@@ -12,7 +17,7 @@ LSDPCAT= horzcat(DataCorrel(1).PCB_TS,DataCorrel(2).PCB_TS ,DataCorrel(3).PCB_TS
 example_data= horzcat(LSDACAT,LSDPCAT);
 %example_data= horzcat(PLA5CAT);
 
-
+%%
 T_shift = 9;
 do_filter = 0; %yes no filter
 

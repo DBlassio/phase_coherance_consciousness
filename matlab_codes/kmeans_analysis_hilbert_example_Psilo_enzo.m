@@ -2,34 +2,16 @@ clc
 clear all
 close all
 
-%%
-cd('C:/Users/diego/Desktop/phase_coherance_consciousness/data');
 
-load('KETA_TS_FC.mat')
+load('PSILO_TS_FC.mat', 'DataCorrel')
 load('Structural.mat')
 
 %%
-KETACAT= horzcat(DataCorrel(1).KET_TS,DataCorrel(2).KET_TS,DataCorrel(3).KET_TS,DataCorrel(4).KET_TS,DataCorrel(5).KET_TS,DataCorrel(6).KET_TS,DataCorrel(7).KET_TS,DataCorrel(8).KET_TS,DataCorrel(9).KET_TS,DataCorrel(10).KET_TS,DataCorrel(11).KET_TS,DataCorrel(12).KET_TS,DataCorrel(13).KET_TS,DataCorrel(14).KET_TS,DataCorrel(15).KET_TS);
-KETPCAT= horzcat(DataCorrel(1).PCB_TS,DataCorrel(2).PCB_TS ,DataCorrel(3).PCB_TS ,DataCorrel(4).PCB_TS ,DataCorrel(5).PCB_TS ,DataCorrel(6).PCB_TS ,DataCorrel(7).PCB_TS ,DataCorrel(8).PCB_TS ,DataCorrel(9).PCB_TS ,DataCorrel(10).PCB_TS ,DataCorrel(11).PCB_TS ,DataCorrel(12).PCB_TS ,DataCorrel(13).PCB_TS ,DataCorrel(14).PCB_TS ,DataCorrel(15).PCB_TS );
-example_data= horzcat(KETACAT,KETPCAT);
+PSIACAT= horzcat(DataCorrel(1).TS_Psilo,DataCorrel(2).TS_Psilo,DataCorrel(3).TS_Psilo,DataCorrel(4).TS_Psilo,DataCorrel(5).TS_Psilo,DataCorrel(7).TS_Psilo,DataCorrel(8).TS_Psilo,DataCorrel(9).TS_Psilo,DataCorrel(10).TS_Psilo,DataCorrel(11).TS_Psilo,DataCorrel(13).TS_Psilo,DataCorrel(14).TS_Psilo,DataCorrel(15).TS_Psilo);
+PSIPCAT= horzcat(DataCorrel(1).TS_PCB,DataCorrel(2).TS_PCB ,DataCorrel(3).TS_PCB ,DataCorrel(4).TS_PCB ,DataCorrel(5).TS_PCB  ,DataCorrel(7).TS_PCB ,DataCorrel(8).TS_PCB ,DataCorrel(9).TS_PCB ,DataCorrel(10).TS_PCB ,DataCorrel(11).TS_PCB,DataCorrel(13).TS_PCB ,DataCorrel(14).TS_PCB ,DataCorrel(15).TS_PCB );
+example_data= horzcat(PSIACAT,PSIPCAT);
 %example_data= horzcat(PLA5CAT);
 
-%%
-%%ZKETAF{7, 1}
-
-
-%LSD1CAT= horzcat(tc_aal{1,1},tc_aal{2,1},tc_aal{3,1},tc_aal{4,1},tc_aal{5,1},tc_aal{6,1},tc_aal{7,1},tc_aal{8,1},tc_aal{9,1},tc_aal{10,1},tc_aal{11,1},tc_aal{12,1},tc_aal{13,1},tc_aal{14,1},tc_aal{15,1});
-%LSD2CAT= horzcat(tc_aal{1,2},tc_aal{2,2},tc_aal{3,2},tc_aal{4,2},tc_aal{5,2},tc_aal{6,2},tc_aal{7,2},tc_aal{8,2},tc_aal{9,2},tc_aal{10,2},tc_aal{11,2},tc_aal{12,2},tc_aal{13,2},tc_aal{14,2},tc_aal{15,2});
-%LSD3CAT= horzcat(tc_aal{1,3},tc_aal{2,3},tc_aal{3,3},tc_aal{4,3},tc_aal{5,3},tc_aal{6,3},tc_aal{7,3},tc_aal{8,3},tc_aal{9,3},tc_aal{10,3},tc_aal{11,3},tc_aal{12,3},tc_aal{13,3},tc_aal{14,3},tc_aal{15,3});
-%PLA4CAT= horzcat(tc_aal{1,4},tc_aal{3,4},tc_aal{4,4},tc_aal{5,4},tc_aal{6,4},tc_aal{7,4},tc_aal{8,4},tc_aal{9,4},tc_aal{10,4},tc_aal{11,4},tc_aal{12,4},tc_aal{13,4},tc_aal{14,4},tc_aal{15,4});
-%PLA5CAT= horzcat(tc_aal{1,5},tc_aal{2,5},tc_aal{3,5},tc_aal{4,5},tc_aal{5,5},tc_aal{6,5},tc_aal{7,5},tc_aal{8,5},tc_aal{9,5},tc_aal{10,5},tc_aal{11,5},tc_aal{12,5},tc_aal{13,5},tc_aal{14,5},tc_aal{15,5});
-%PLA6CAT= horzcat(tc_aal{1,6},tc_aal{2,6},tc_aal{3,6},tc_aal{4,6},tc_aal{5,6},tc_aal{6,6},tc_aal{7,6},tc_aal{8,6},tc_aal{9,6},tc_aal{10,6},tc_aal{11,6},tc_aal{12,6},tc_aal{13,6},tc_aal{14,6},tc_aal{15,6});
-
-%n_ROI = 82;
-%n_time = 5000;
-
-%example_data = randn(n_ROI,n_time);
-%example_data= horzcat(LSD1CAT,LSD2CAT,LSD3CAT,PLA4CAT,PLA5CAT,PLA6CAT);
 
 T_shift = 9;
 do_filter = 0; %yes no filter
@@ -108,7 +90,7 @@ disp('size after removing outliers')
 size(all_pattern2D)
 %%
 % kmeans clustering
-%load('LSDnew.mat')
+%load('PSInew.mat')
 %load('Structural.mat')
 %load('startl.mat')
 %load('startl9.mat')
@@ -159,20 +141,21 @@ end
 for bst = 1:n_state
         
         rate(bst) = sum(cidx_Pha==I(bst))/(L-2*T_shift);
-        ratea(bst) = sum(cidx_Pha(1:6613)==I(bst))/(L-2*T_shift);
-        rateb(bst) = sum(cidx_Pha(6614:13184)==I(bst))/(L-2*T_shift);
+        ratea(bst) = sum(cidx_Pha(1:1226)==I(bst))/(L-2*T_shift);
+        rateb(bst) = sum(cidx_Pha(1227:2469)==I(bst))/(L-2*T_shift);
 end
 
 
 % Initialize the matrix to store the results
-times_matrix_k = zeros(15, 2); % Assuming there are 15 elements in DataCorrel
-times_matrix_p = zeros(15, 2); % Assuming there are 15 elements in DataCorrel
+times_matrix_k = zeros(13, 2); % Assuming there are 15 elements in DataCorrel
+times_matrix_p = zeros(13, 2); % Assuming there are 15 elements in DataCorrel
 
 % Loop through each element in DataCorrel
-for i = 1:15
-    % Get the size of the second dimension of KET_TS
-    size_value_k = size(DataCorrel(i).KET_TS, 2);
-    size_value_p = size(DataCorrel(i).PCB_TS, 2);
+l=[1,2,3,4,5,7,8,9,10,11,13,14,15];
+for i = 1:13
+    % Get the size of the second dimension of TS_Psilo
+    size_value_k = size(DataCorrel(l(i)).TS_Psilo, 2);
+    size_value_p = size(DataCorrel(l(i)).TS_PCB, 2);
 
     % Store the size value in the first column
    times_matrix_k(i, 1) = size_value_k;
@@ -190,7 +173,7 @@ end
 
 
 
-for s = 1:15
+for s = 1:13
     for j= 1:n_state
         if s == 1
             scratekt(s,j)=sum(cidx_Pha(1:times_matrix_k(s, 2))==I(j))/(times_matrix_k(1, 2));
@@ -203,18 +186,18 @@ end
 
 
 
-for s = 1:15
+for s = 1:13
     for j= 1:n_state
         if s == 1
-            scratektp(s,j)=sum(cidx_Pha(6613 +1:6613 +times_matrix_p(s, 2))==I(j))/(times_matrix_p(1, 2));
+            scratektp(s,j)=sum(cidx_Pha(1226 +1:1226 +times_matrix_p(s, 2))==I(j))/(times_matrix_p(1, 2));
         else
-            scratektp(s,j)=sum(cidx_Pha(6613 +times_matrix_p(s-1, 2) +1:6613 +times_matrix_p(s, 2) -20)==I(j))/(times_matrix_p(1, 2));
+            scratektp(s,j)=sum(cidx_Pha(1226+times_matrix_p(s-1, 2) +1:1226 +times_matrix_p(s, 2) -20)==I(j))/(times_matrix_p(1, 2));
         end
     end
 
 end
 
-grp = [zeros(15,1)',ones(15,1)'];
+grp = [zeros(13,1)',ones(13,1)'];
 for i = 1:n_state
     c_1=scratekt(:,i);
     c_2=scratektp(:,i);
@@ -244,7 +227,7 @@ end
 subplot(3,n_state+1,2*n_state+2 +1)
 bar(ratea/sum(ratea))
 ylim([0 0.5])
-ylabel('Probability KETA')
+ylabel('Probability PSI')
 
 subplot(3,n_state+1,2*n_state+2 +2)
 bar(rateb/sum(rateb))
@@ -253,6 +236,3 @@ ylabel('Probability PLACEBO')
 
 
 %%
-
-filename = 'https://drive.google.com/file/d/1wNRUcn9_4OZyeccdDd2GP74EI3F2X48-/view?usp=drive_link';
-data = load(filename);
