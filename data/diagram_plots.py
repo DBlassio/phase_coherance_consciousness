@@ -97,15 +97,15 @@ def Region_Heatmap(corr_matrix,
 # ------------------------------
 # Chord Diagram
 # ------------------------------
-
 def chord_diagram(correlation_matrix, region_boundaries, 
-                                     region_names=None,
-                                     mean=True, 
-                                     threshold=0.01, 
-                                     name="Brain Region Connectivity", 
-                                     normalize=True, 
-                                     min_opacity=0.3, 
-                                     min_width=0.5):
+                 region_names=None,
+                 mean=True, 
+                 threshold=0.01, 
+                 name="Brain Region Connectivity", 
+                 normalize=True, 
+                 min_opacity=0.3, 
+                 min_width=0.5,
+                 ax=None):
     """
     Create a circular chord diagram for a brain correlation matrix based on index ranges.
     
@@ -119,38 +119,35 @@ def chord_diagram(correlation_matrix, region_boundaries,
     - threshold: Minimum absolute correlation strength to display chord (default: 0.01)
     - name: Title for the plot
     - normalize: Whether to normalize the correlation values for better visualization
+    - ax: matplotlib axis object. If None, creates a new figure
+    [resto de parámetros igual...]
     """
     
     N = correlation_matrix.shape[0]
     
-    # Ensure the correlation matrix is square
+    # Validaciones (igual que antes)
     if correlation_matrix.shape[0] != correlation_matrix.shape[1]:
         raise ValueError("Correlation matrix must be square")
     
-    # Ensure the matrix size is adequate for the specified regions
     if region_boundaries[-1] > N:
         raise ValueError(f"Region boundary {region_boundaries[-1]} exceeds matrix size {N}")
     
     num_regions = len(region_boundaries)
     region_indices = [0] + region_boundaries
     
-    # Create default region names if not provided
     if region_names is None:
         region_names = [f"Region {i+1}" for i in range(num_regions)]
     elif len(region_names) != num_regions:
         raise ValueError("Number of region names must match the number of regions")
     
-    # Calculate group connectivity (average/median correlation between regions)
+    # Cálculo de conectividad (igual que antes)
     group_connectivity = np.zeros((num_regions, num_regions))
-    
-    # Calculate region sizes (number of observations in each region)
     region_sizes = []
     for i in range(num_regions):
         start_i = region_indices[i]
         end_i = region_indices[i+1] if i < num_regions-1 else N
         region_sizes.append(end_i - start_i)
     
-    # Calculate the arc lengths proportional to region sizes
     total_size = sum(region_sizes)
     arc_lengths = np.array(region_sizes) / total_size * 2 * np.pi
     
@@ -162,7 +159,6 @@ def chord_diagram(correlation_matrix, region_boundaries,
             start_j = region_indices[j]
             end_j = region_indices[j+1] if j < num_regions-1 else N
             
-            # Extract submatrix and calculate the average/median connectivity
             submatrix = correlation_matrix[start_i:end_i, start_j:end_j]
             
             if mean:
@@ -178,28 +174,33 @@ def chord_diagram(correlation_matrix, region_boundaries,
                 else:
                     group_connectivity[i, j] = np.median(submatrix)
     
-    # Normalize correlation values if requested - Scale to use full color range while preserving sign
+    # Normalización (igual que antes)
     if normalize:
-        # Excluding the diagonals
         mask = ~np.eye(num_regions, dtype=bool)
         max_corr = np.max(np.abs(group_connectivity[mask]))
         if max_corr > 0: 
             group_connectivity = group_connectivity / max_corr
             group_connectivity = np.clip(group_connectivity, -1, 1)
     
-    #Diagram ----------------------------------------------------------------------------------------------------------------
-    # Generate colors for regions
+    # MODIFICACIÓN PRINCIPAL: Usar ax si se proporciona, sino crear nueva figura
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6, 6))
+        return_fig = True
+    else:
+        fig = ax.figure
+        return_fig = False
+    
+    # Resto del código de visualización (igual que antes)
     cmap = plt.cm.viridis
     group_colors = cmap(np.linspace(0, 1, num_regions))[:, :3]
 
-    fig, ax = plt.subplots(figsize=(6, 6))
     start_angles = np.cumsum(np.concatenate(([0], arc_lengths[:-1])))
     end_angles = start_angles + arc_lengths
     start_angles -= np.pi/2 
     end_angles -= np.pi/2
     inner_radius, outer_radius = 0.8, 1.0
     
-    # Draw arcs for each region
+    # Dibujar arcos
     for i in range(num_regions):
         arc_theta = np.linspace(start_angles[i], end_angles[i], 50)    
         x_inner = inner_radius * np.cos(arc_theta)
@@ -213,7 +214,7 @@ def chord_diagram(correlation_matrix, region_boundaries,
                 alpha=0.7,
                 edgecolor='none')
         
-        # Position labels
+        # Etiquetas
         mid_angle = (start_angles[i] + end_angles[i]) / 2
         label_radius = 1.1
         label_x = label_radius * np.cos(mid_angle)
@@ -231,7 +232,6 @@ def chord_diagram(correlation_matrix, region_boundaries,
         else:  
             ha, va = 'left', 'top'
             rotation = mid_angle * 180/np.pi - 90
-        
 
         ax.text(label_x, label_y, region_names[i],
                 fontweight='bold',
@@ -239,19 +239,17 @@ def chord_diagram(correlation_matrix, region_boundaries,
                 verticalalignment=va,
                 rotation=rotation)
     
-    # Create a colormap for chords (blue to red) with more saturation
+    # Colormap para acordes
     blue_red_cmap = mcolors.LinearSegmentedColormap.from_list(
-    'blue_red', [(0, 'darkblue'), (0.45, 'blue'), (0.5, 'white'),
-                (0.55, 'red'), (1, 'darkred')])
+        'blue_red', [(0, 'darkblue'), (0.45, 'blue'), (0.5, 'white'),
+                    (0.55, 'red'), (1, 'darkred')])
     
-    # Draw chords
-    chord_count = 0
+    # Dibujar acordes
     for i in range(num_regions):
-        for j in range(i+1, num_regions):  # Only upper triangle to avoid duplicates
+        for j in range(i+1, num_regions):
             correlation_value = group_connectivity[i, j]
             
             if abs(correlation_value) > threshold:
-                chord_count += 1
                 mid_angle_i = (start_angles[i] + end_angles[i]) / 2
                 mid_angle_j = (start_angles[j] + end_angles[j]) / 2
                 
@@ -271,31 +269,28 @@ def chord_diagram(correlation_matrix, region_boundaries,
                 curve_y = (1-t)**3 * y1 + 3*(1-t)**2 * t * ctrl_y1 + 3*(1-t) * t**2 * ctrl_y2 + t**3 * y2
                 
                 conn_strength = abs(correlation_value)
-                # Ensure minimum line width
                 line_width = max(min_width, min_width + 4 * conn_strength)
-                
-                # Map correlation value (-1 to 1) to colormap (0 to 1)
                 color_val = (correlation_value + 1) / 2
                 chord_color = blue_red_cmap(color_val)
-
-                # Ensure minimum opacity
                 alpha_val = max(min_opacity, min_opacity + 0.7 * conn_strength)
                 
                 ax.plot(curve_x, curve_y, color=chord_color, alpha=alpha_val, linewidth=line_width)
     
-    # Add a colorbar correlation scale
-    sm = plt.cm.ScalarMappable(cmap=blue_red_cmap, norm=plt.Normalize(-1, 1))
-    sm.set_array([])
-    cbar = plt.colorbar(sm, ax=ax, shrink=0.75, label='Correlation')
-    
-    # Add info text about normalization if applied
-    if normalize:
-        ax.text(0.78, 0.02, f"Values normalized (max abs corr: {max_corr:.3f})",
-                transform=ax.transAxes, fontsize=8, va='top', ha='left')
-    
+    # Colorbar solo si es figura independiente
+    if return_fig:
+        sm = plt.cm.ScalarMappable(cmap=blue_red_cmap, norm=plt.Normalize(-1, 1))
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=ax, shrink=0.75, label='Correlation')
+        
+        if normalize:
+            ax.text(0.78, 0.02, f"Values normalized (max abs corr: {max_corr:.3f})",
+                    transform=ax.transAxes, fontsize=8, va='top', ha='left')
     
     ax.axis('equal')
     ax.axis('off')
     ax.set_title(name, fontsize=15, fontweight='bold')
     
-    return fig
+    if return_fig:
+        return fig
+    else:
+        return ax
