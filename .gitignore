@@ -1,3 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Caché
+.cache/
+.mypy_cache/
+.pytest_cache/
+*.log
+*.tmp
+*.bak
+
+# Virtual Env
+venv/
+.env
+.env.*
+
+# Modelos y datasets locales
+models/
+data/
+*.h5
+*.pkl
+*.joblib
 *.csv
+*.tsv
+*.parquet
 *.xlsx
 *.mat
