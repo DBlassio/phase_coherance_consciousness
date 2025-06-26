@@ -15,4 +15,9 @@ A dynamic functional connectivity pipeline to explore how LSD reshapes conscious
 
 All scripts are modular: feel free to swap in your own dataset or tweak clustering parameters. The end goal? To reveal how LSD pushes the brain toward new dynamic configurations without sacrificing overall flexibility.
 
+
+## Documentation
+
+– **Report**: See the full project report in [`report/report.pdf`](report/report.pdf).
+
 ---
