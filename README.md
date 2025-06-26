@@ -18,6 +18,6 @@ All scripts are modular: feel free to swap in your own dataset or tweak clusteri
 
 ## Documentation
 
-– **Report**: See the full project report in [`report/report.pdf`](report/report.pdf).
+– **Report**: See the full project report in [`report/Dynamical_Consciousness_LSD.pdf`](report/Dynamical_Consciousness_LSD.pdf).
 
 ---
